@@ -134,6 +134,24 @@ class Metadata:
                     files_with_metadata[file] = found
                     continue
 
+            # 4. Edited files fallback: e.g., foo-edited.jpg -> fallback to foo.jpg.json if specific edited json is missing
+            base_name, ext_name = os.path.splitext(file)
+            unedited_base_name = re.sub(r'-(edited|EDIT)$', '', base_name, flags=re.IGNORECASE)
+            if unedited_base_name != base_name:
+                for ext in ['.supplemental-metadata.json', '.json']:
+                    candidate = Metadata._sanitize_metadata_filename(f'{unedited_base_name}{ext_name}{ext}')
+                    if os.path.isfile(candidate):
+                        found = candidate
+                        break
+                    candidate = Metadata._sanitize_metadata_filename(f'{unedited_base_name}{ext}')
+                    if os.path.isfile(candidate):
+                        found = candidate
+                        break
+                if found:
+                    assert file not in files_with_metadata
+                    files_with_metadata[file] = found
+                    continue
+
             if not Metadata._is_live_photo(file):
                 tqdm.write(f'Cannot find metadata for {file}')
             files_with_metadata[file] = None

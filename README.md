@@ -11,6 +11,7 @@ After applying several fixes and improvements, I got it running smoothly. I am m
 
 ## Modifications & Improvements
 Compared to the original project, this version includes:
+- **Edited Files Support (WIP):** Added experimental logic to detect and handle `-edited` / `-EDIT` files, ensuring proper metadata fallback when specific edited JSONs are missing.
 - **Dependency Optimization:** Removed the external dependency on `libmagic` to simplify installation and ensure cross-platform compatibility (especially on Windows).
 - **Path and Special Characters Fix:** Improved handling of paths and special characters (such as emojis or accented characters) during file processing.
 - **Bug Fixes & Stability:** Various code refinements to handle specific image formats and directory parsing more reliably.

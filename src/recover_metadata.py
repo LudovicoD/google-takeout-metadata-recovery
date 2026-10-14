@@ -34,7 +34,14 @@ class Metadata:
         files_with_metadata = Metadata._get_files_with_metadata(root_folder)
         print(f'{len(files_with_metadata)} file(s) to recover metadata')
 
+        edited_files_count = 0
+
         for media_file, metadata_file in tqdm(files_with_metadata.items()):
+            # Controlla se il file corrente ha il suffisso -edited o -EDIT
+            base_name, _ = os.path.splitext(os.path.basename(media_file))
+            if re.search(r'-(edited|EDIT)$', base_name, flags=re.IGNORECASE):
+                edited_files_count += 1
+
             output_filepath = Metadata._get_output_filename(root_folder, output_folder, media_file)
             if metadata_file is None:
                 tqdm.write(f'Skipping {media_file} as there is no metadata associated. Saving to output folder')
@@ -75,6 +82,7 @@ class Metadata:
                     pass
 
         print('Recovery of metadata completed')
+        print(f'Totale file "-edited" incontrati e processati: {edited_files_count}')
 
     @staticmethod
     def _get_files_with_metadata(root_folder: str) -> dict[str, str]:
